@@ -1,0 +1,33 @@
+.search {
+    position: relative;
+    input {
+        width: 400px;
+        font-size: 20px;
+        font-weight: 600;
+    }
+}
+
+.searchBtn {
+    opacity: 0.3;
+    font-weight: inherit;
+    width: 19px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    transform: translate(70%, 85%);
+}
+
+.removeBtn {
+    position: absolute;
+    right: 0;
+    top: 0;
+    transform: translate(-25%, 25%);
+    cursor: pointer;
+}
+
+.root {
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    width: 300px;
+    padding: 10px 50px;
+    border-radius: 10px;
+}

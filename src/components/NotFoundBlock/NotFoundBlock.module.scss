@@ -1,0 +1,17 @@
+.root {
+    text-align: center;
+    padding: 100px;
+
+    p {
+        font-size: 22px;
+    }
+    h2 {
+        margin-top: 10px;
+        color: brown;
+        // transition: all 12s ease-in-out;
+        &:hover{
+            font-size: 30px;
+            color: aquamarine;
+        }
+    }
+}
