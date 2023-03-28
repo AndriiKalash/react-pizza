@@ -4,12 +4,12 @@ import { useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux';
 
 import { setCategoryId, setCarrentPage, setFilters, filterSelector } from '../redux/slice/filterSlice';
-import { fetchPizzas, pizzaSelector } from '../redux/slice/pizzasSlice'
+import { fetchPizzas, pizzaSelector } from '../redux/slice/pizzasSlice';
 import Categories from '../components/Categories';
-import Sort, { sortList } from '../components/Sort'
-import PizzaBlock from '../components/PizzaBlock'
-import Skeleton from '../components/PizzaBlock/Skeleton'
-import Pagination from '../components/Pagination'
+import Sort, { sortList } from '../components/Sort';
+import PizzaBlock from '../components/PizzaBlock';
+import Skeleton from '../components/PizzaBlock/Skeleton';
+import Pagination from '../components/Pagination';
 
 function Home() {
     const [openMenu, setOpenMenu] = React.useState(false);
@@ -77,8 +77,8 @@ function Home() {
     }, [categoryId, sort.sortProperty, searchValue, carrentPage]);
 
     const skeletons =  [...new Array(6)].map((_, index) => <Skeleton key={index}/>)
-    const pizzasBlock = pizzas.map((obj, i) => <PizzaBlock key={i} {...obj} />)
-    
+    const pizzasBlock = pizzas.map((obj) => <PizzaBlock key={obj.id} {...obj} />)
+     
     return (
         <div className="container">
             <div onClick={openMenuBurger} className={openMenu ? 'content__icon-menuX' : 'content__icon-menu'}>

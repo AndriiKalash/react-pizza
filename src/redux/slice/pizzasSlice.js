@@ -25,7 +25,7 @@ export const fetchPizzas = createAsyncThunk(
 export const pizzasSlice = createSlice({
     name: 'pizzas',
     initialState,
-    reducers: {
+    reducers: {        
         // pizzasFetching(state){
         //     state.loadingStatus = 'loading'
         // },
@@ -60,5 +60,5 @@ const {reducer, actions} = pizzasSlice;
 // export const {
 //     pizzasFetching,
 //     pizzasFetched,
-//     pizzasFetchingError } = actions;
+//     pizzasFetchingError} = actions;
 export default reducer;

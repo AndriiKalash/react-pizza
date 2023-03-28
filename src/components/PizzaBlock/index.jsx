@@ -1,7 +1,7 @@
-import React from 'react'
-// import ContentLoader from 'react-content-loader'
-import { useSelector, useDispatch } from 'react-redux'
-import { addItem, cartItemByIdSelector } from '../../redux/slice/cartSlice'
+import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { addItem, cartItemByIdSelector } from '../../redux/slice/cartSlice';
 
 // масив для type так как он задан изначально как [0, 1]
 const typesName = ['тонкое', 'традиционное'];
@@ -15,7 +15,6 @@ function PizzaBlock({ title, price, imageUrl, sizes, types, id }) {
   const dispatch = useDispatch();
   // const cartItem = useSelector(state => state.cart.items.find(obj => obj.id === id)); 
   const cartItem = useSelector(cartItemByIdSelector(id));
-  // const addedCount = cartItem ? cartItem.count : 0; 
   
   const onClickAdd = () => {
     // сгенерировал обьект каторый будет хранится в корзине
@@ -31,13 +30,16 @@ function PizzaBlock({ title, price, imageUrl, sizes, types, id }) {
     dispatch(addItem(cartIitem));
   };
 
+
   return (
     < div className="pizza-block" >
-      < img
-        className="pizza-block__image"
-        src={imageUrl}
-        alt="Pizza"
-      />
+      <Link  to={`/pizza/${id}`} >
+        < img 
+            className="pizza-block__image"
+            src={imageUrl}
+            alt="Pizza"
+        />
+      </Link>     
       <h4 className="pizza-block__title">{title}</h4>
       <div className="pizza-block__selector">
         <ul>
@@ -77,7 +79,6 @@ function PizzaBlock({ title, price, imageUrl, sizes, types, id }) {
             />
           </svg>
           <span >Добавить</span>
-           {/* {addedCount > 0 && <i>{addedCount}</i>}  */}
            {cartItem ? <i>{cartItem.count}</i> : ''}
         </button>
       </div>
