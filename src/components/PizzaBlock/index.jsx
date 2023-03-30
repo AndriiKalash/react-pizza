@@ -25,11 +25,9 @@ function PizzaBlock({ title, price, imageUrl, sizes, types, id }) {
       id,
       type: typesName[activeType],
       size: sizes[activeSize],
-
     };
     dispatch(addItem(cartIitem));
   };
-
 
   return (
     < div className="pizza-block" >

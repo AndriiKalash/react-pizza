@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from "react-router-dom";
 import { useHttp } from "../hooks/http.hook";
+import Skeleton from "../components/PizzaBlock/Skeleton";
 
 function SinglePizzaInfo() {
 
@@ -18,14 +19,9 @@ function SinglePizzaInfo() {
       })
   },[]);
 
-  if (!fullPizza) {
-    return (
-      <h1> ... Loading </h1>
-    )
-  }
-
-    return (
-        < div className="container pizza-block" >
+    return ( 
+      (!fullPizza) ? <Skeleton/> :
+         < div className="container pizza-block" >
                < img 
                  className="pizza-block__image"
                  src={fullPizza.imageUrl}
@@ -34,8 +30,8 @@ function SinglePizzaInfo() {
                 <h4 className="pizza-block__title">{fullPizza.title}</h4>
                 <div className="pizza-block__price">
                   от{fullPizza.price} ₽
-                </div>     
-         </div >
+                </div>           
+         </div > 
     )
 }
 export default SinglePizzaInfo;

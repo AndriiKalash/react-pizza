@@ -15,8 +15,7 @@ export const sortList = [
 function Sort() {
   
   const [open, setOpen] = React.useState(false);
-  // const sort = useSelector((state) => state.filter.sort)
-  const sort = useSelector(filterSelector)
+  const {sort} = useSelector(filterSelector)
   const dispatch = useDispatch();
 
   const onClickListItem = (obj) => {

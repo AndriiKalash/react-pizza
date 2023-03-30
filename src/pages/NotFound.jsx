@@ -1,6 +1,7 @@
-import React from 'react'
+import React from 'react';
 
-import NotFoundBlock from '../components/NotFoundBlock'
+import NotFoundBlock from '../components/NotFoundBlock';
+
 function NotFound() {
     return (
         <NotFoundBlock />

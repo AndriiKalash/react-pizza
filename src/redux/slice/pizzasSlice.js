@@ -1,7 +1,6 @@
 import { createSlice, createAsyncThunk} from "@reduxjs/toolkit";
 import axios from 'axios'
 
-
 const initialState = {
     pizzas: [],
     loadingStatus: 'idle'
@@ -53,7 +52,7 @@ export const pizzasSlice = createSlice({
     }
 });
 
-//selector - this is func which return state for (const {pizzas, loadingStatus } = useSelector(pizzaSelector)) , like method createSelector from redux Toolkit, but hand-made :
+//selector - this is func return state for (const {pizzas, loadingStatus } = useSelector(pizzaSelector)) , like method createSelector from redux Toolkit, but hand-made :
 export const pizzaSelector = (state) => state.pizzas;
 
 const {reducer, actions} = pizzasSlice;
