@@ -1,30 +1,43 @@
 import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { addItem, cartItemByIdSelector } from '../../redux/slice/cartSlice';
+import { cartItemByIdSelector } from '../../redux/cart/selectors';
+import {  addItem } from '../../redux/cart/slise';
+import { CartItemType} from '../../redux/cart/type';
+import { useAppDispatch } from '../../redux/store';
 
 // масив для type так как он задан изначально как [0, 1]
-const typesName = ['тонкое', 'традиционное'];
+export const typesName = ['тонкое', 'традиционное'];
 
-function PizzaBlock({ title, price, imageUrl, sizes, types, id }) {
+type PizzaBlockProps = {
+  title: string;
+  price: number;
+  imageUrl: string;
+  sizes: number[];
+  types:number[];
+  id: string
+}
+
+export const PizzaBlock: React.FC <PizzaBlockProps> = ({ title, price, imageUrl, sizes, types, id }) => {
 
   // стейты для определения выбранного обьекта в types и sizes для клика 
   const [activeType, setActiveType] = React.useState(0);
   const [activeSize, setActiveSize] = React.useState(0);
   
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   // const cartItem = useSelector(state => state.cart.items.find(obj => obj.id === id)); 
   const cartItem = useSelector(cartItemByIdSelector(id));
   
   const onClickAdd = () => {
     // сгенерировал обьект каторый будет хранится в корзине
-    const cartIitem = {
+    const cartIitem: CartItemType = {
       title,
       price,
       imageUrl,
       id,
       type: typesName[activeType],
       size: sizes[activeSize],
+      count: 0 
     };
     dispatch(addItem(cartIitem));
   };
@@ -84,4 +97,3 @@ function PizzaBlock({ title, price, imageUrl, sizes, types, id }) {
   )
 }
 
-export default PizzaBlock;

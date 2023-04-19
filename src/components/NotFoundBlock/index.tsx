@@ -1,8 +1,8 @@
-import React from 'react';
+import {FC} from 'react';
 import { Link } from "react-router-dom";
 import styles from './NotFoundBlock.module.scss';
 
-function NotFoundBlock() {
+export const NotFoundBlock: FC = () => {
     return (
         <div className={styles.root}>
             <h1>
@@ -10,9 +10,10 @@ function NotFoundBlock() {
             </h1>
             <p>К сожалению дання страница отсутствует в нашем магазине</p>
             <Link to='/'>
-            <h2>Click to main page </h2>
+            <button className="button button--outline button--add">
+              <span >На главную</span>
+            </button>
             </Link>
         </div>
     )
 }
-export default NotFoundBlock;
