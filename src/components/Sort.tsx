@@ -1,9 +1,20 @@
-import React, { useCallback } from 'react';
-import { useRef } from 'react';
-import { useSelector, useDispatch } from 'react-redux'
-import { setSort, filterSelector } from '../redux/slice/filterSlice'
+import React, {useRef ,useCallback } from 'react';
+import { setSort } from '../redux/filter/slice';
+import { SortType } from '../redux/filter/type'
+import { useAppDispatch } from '../redux/store';
+import arrowTopSvg from '../assets/img/arrow-top.svg'
 
-export const sortList = [
+
+type SortProps = {
+  sort: SortType;
+}
+
+type PopupClick = MouseEvent & {
+  composedPath(): Node[];
+}
+
+// sort list
+export const sortList: SortType[] = [
   { name: 'популярности(DESC)', sortProperty: 'rating' },
   { name: 'популярности(ASC)', sortProperty: '-rating' },
   { name: 'цене(DESC)', sortProperty: 'price' },
@@ -12,25 +23,25 @@ export const sortList = [
   { name: 'алфавиту(ASC)', sortProperty: '-title' },
 ]
 
-function Sort() {
+export const Sort: React.FC<SortProps> = React.memo(({sort}) => {
   
   const [open, setOpen] = React.useState(false);
-  const {sort} = useSelector(filterSelector)
-  const dispatch = useDispatch();
-
-  const onClickListItem = (obj) => {
+  const dispatch = useAppDispatch();
+  const onClickListItem = (obj:SortType) => {
     dispatch(setSort(obj))
     setOpen(false);
   }
-  
-   const sortRef = useRef();
-   const handleClickOutsite = useCallback((e)=>{ 
-    // покажет весь путь куда был клик 
-      if (!e.composedPath().includes(sortRef.current)) {
-        setOpen(false);
-      } 
-   },[])
+  // saying we can add to sortRef null or html 
+  const sortRef = useRef<HTMLDivElement>(null);
 
+  const handleClickOutsite = useCallback((event: MouseEvent)=>{ 
+   const _event = event as PopupClick; //23 
+   // покажет весь путь куда был клик 
+     if (sortRef.current && !_event.composedPath().includes(sortRef.current)) {
+       setOpen(false);
+     } 
+  },[])
+   
   React.useEffect(() => {
     document.body.addEventListener('click', handleClickOutsite);
     return () => {
@@ -41,18 +52,7 @@ function Sort() {
   return (
     <div ref={sortRef} className="sort">
       <div className="sort__label">
-        <svg
-          width="10"
-          height="6"
-          viewBox="0 0 10 6"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M10 5C10 5.16927 9.93815 5.31576 9.81445 5.43945C9.69075 5.56315 9.54427 5.625 9.375 5.625H0.625C0.455729 5.625 0.309245 5.56315 0.185547 5.43945C0.061849 5.31576 0 5.16927 0 5C0 4.83073 0.061849 4.68424 0.185547 4.56055L4.56055 0.185547C4.68424 0.061849 4.83073 0 5 0C5.16927 0 5.31576 0.061849 5.43945 0.185547L9.81445 4.56055C9.93815 4.68424 10 4.83073 10 5Z"
-            fill="#2C2C2C"
-          />
-        </svg>
+      <img src={arrowTopSvg} alt="arrowTopSvg" />
         <b>Сортировка по:</b>
         <span onClick={() => setOpen(!open)}>
           {sort.name}
@@ -76,6 +76,4 @@ function Sort() {
       }
     </div>
   )
-}
-
-export default Sort;
+})

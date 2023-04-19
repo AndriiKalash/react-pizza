@@ -1,13 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import  {FC, useEffect, useState } from 'react';
 import { useNavigate, useParams } from "react-router-dom";
 import { useHttp } from "../hooks/http.hook";
-import Skeleton from "../components/PizzaBlock/Skeleton";
 
-function SinglePizzaInfo() {
+import {Skeleton} from "../components";
+
+const SinglePizzaInfo: FC = () => {
 
   const {id} = useParams();
   const navigate = useNavigate();
-  const [fullPizza, setFullPizza] = useState();
+  const [fullPizza, setFullPizza] = useState<{
+    imageUrl: string;
+    title: string;
+    price: number;
+  }>();
   const {request} = useHttp();
 
   useEffect(() => {

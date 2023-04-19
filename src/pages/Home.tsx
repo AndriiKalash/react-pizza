@@ -1,48 +1,61 @@
 import React, { useCallback } from 'react';
 import qs from 'qs';
 import { useNavigate } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { useAppDispatch } from '../redux/store';
 
-import { setFilters, filterSelector } from '../redux/slice/filterSlice';
-import { fetchPizzas, pizzaSelector } from '../redux/slice/pizzasSlice';
-import Categories from '../components/Categories';
-import Sort, { sortList } from '../components/Sort';
-import PizzaBlock from '../components/PizzaBlock';
-import Skeleton from '../components/PizzaBlock/Skeleton';
-import Pagination from '../components/Pagination';
+import {  filterSelector} from '../redux/filter/selectors';
+import { setFilters, setCategoryId} from '../redux/filter/slice';
+import { Status } from '../redux/pizza/type';
+import { pizzaSelector } from "../redux/pizza/selectors";
+import { fetchPizzas } from "../redux/pizza/asyncActions";
 
-function Home() {
+import {
+    Categories,
+    Sort,
+    PizzaBlock,
+    Skeleton,
+    Pagination,
+    sortList,   
+} from '../components'
+
+
+const Home: React.FC = () => {
 
     const [openMenu, setOpenMenu] = React.useState(false);
     const { categoryId, sort, carrentPage, searchValue } = useSelector(filterSelector);
     const {pizzas, loadingStatus} = useSelector(pizzaSelector);
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     // hook router for adding search string to URL
     const navigate = useNavigate();
     const isSearch = React.useRef(false);
     const isMounted = React.useRef(false);
 
+    const onChangeCategory = useCallback((id:number) => dispatch(setCategoryId(id)),[]);
+    
     const requestPizzas = () => {
            const category = categoryId > 0 ? `category=${categoryId}` : '';
            const sortBy = sort.sortProperty.replace('-', '');
-           const order = sort.sortProperty.includes('-');
+           const order = sort.sortProperty.includes('-')? 'asc' : 'desc';
            const search = searchValue ? `&search=${searchValue}` : '';
-           dispatch(fetchPizzas({
+           dispatch(
+            fetchPizzas({
             category,
             sortBy,
             order,
             search,
-            carrentPage}));            
+            carrentPage: String(carrentPage)
+        }));            
     }
 
     React.useEffect(() => {
         if (isMounted.current) {
-        // переделывает обьект в строку
+        // create string from object
             const queryString = qs.stringify({
                 sortProperty: sort.sortProperty,
                 categoryId,
                 carrentPage });
-        // вшивает строку в ссылку
+        // added string to URL
             navigate(`?${queryString}`);
         }
         isMounted.current = true;
@@ -54,8 +67,13 @@ function Home() {
             const params = qs.parse(window.location.search.substring(1));
              // took obj from sortProperty arr (becouse payload for state.sort should be the obj)
              const sortParams = sortList.find((obj) => obj.sortProperty === params.sortProperty);
-            (Number(params.categoryId) === 0) ? isSearch.current=false : isSearch.current = true;
-            dispatch(setFilters({ ...params, sortParams }));   
+            (Number(params.categoryId) === 0) ? isSearch.current=false :
+             isSearch.current = true;
+            dispatch(setFilters({
+                categoryId: Number(params.categoryId),
+                sort: sortParams? sortParams : sortList[0],
+                carrentPage: Number(params.carrentPage)
+            }));   
         }
     }, []);
 
@@ -66,12 +84,14 @@ function Home() {
             requestPizzas();
         }
         isSearch.current = false;
-
     },[categoryId, sort.sortProperty, searchValue, carrentPage]);
 
     const skeletons =  [...new Array(6)].map((_, index) => <Skeleton key={index}/>)
-    const pizzasBlock = pizzas.map((obj) => <PizzaBlock key={obj.id} {...obj} />)
-     
+    const pizzasBlock = pizzas.filter((obj) =>{
+        return searchValue? obj.title.toLocaleLowerCase().includes(searchValue.toLowerCase()):obj
+       })
+       .map((obj:any) => <PizzaBlock key={obj.id} {...obj} />)
+                       
     return (
         <div className="container">
             <div onClick={()=>setOpenMenu(!openMenu)}
@@ -79,12 +99,15 @@ function Home() {
                 <span></span>
             </div>
             <div className="content__top">
-                <Categories openMenu={openMenu}/>
-                <Sort />
+                <Categories
+                 openMenu={openMenu} 
+                 categoryId={categoryId}
+                 onChangeCategory={onChangeCategory}/>
+                <Sort sort={sort}/>
             </div>
             <h2 className="content__title">Все пиццы</h2>
             {
-               (loadingStatus === "error" 
+               (loadingStatus === Status.ERROR 
                 ) ? (
                 <div className='content__error-info'>
                     <h2>Произошла ошибка 😟</h2>
@@ -92,7 +115,7 @@ function Home() {
                 </div> 
                 ) : ( 
                 <div className="content__items">
-                    {(loadingStatus === 'loading') ? skeletons : pizzasBlock }
+                    {(loadingStatus === Status.LOADING) ? skeletons : pizzasBlock }
                 </div>)
             }
             <Pagination/>
